@@ -40,8 +40,8 @@ Character = '{Letter}' | '{Punctuation}' | '{Digit}'
 Identifier = ({Letter})({Letter}|{Digit}|"_")*
 Boolean = T|F
 
-PosInteger = [1-9]({Digit}|"_")*{Digit}
-Integer = {PosInteger}|0
+PosInteger = [1-9]({Digit}|[_])*{Digit}
+Integer = [1-9]([0-9]|[_])*|0
 Float = {Integer}"."{PosInteger}
 Rat = {Integer}"/"{PosInteger}
 
@@ -146,7 +146,7 @@ Rat = {Integer}"/"{PosInteger}
     /* literals */
     {Identifier}                   { return symbol(sym.IDENTIFIER, yytext()); }
     {Character}                    { return symbol(sym.CHAR_LIT, yytext()); }
-    {PosInteger}                   { return symbol(sym.INT_LIT, Integer.parseInt(yytext())); }
+    {Integer}                      { return symbol(sym.INT_LIT, Integer.parseInt(yytext())); }
     {Float}                        { return symbol(sym.FLOAT_LIT, Float.parseFloat(yytext())); }
     {Rat}                          { return symbol(sym.RAT_LIT, yytext()); }
     \"                             { string.setLength(0); yybegin(STRING); }

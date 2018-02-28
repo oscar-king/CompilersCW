@@ -1,10 +1,7 @@
 
 tests/open/p-fib.s
-Exception in thread "main" java.lang.Error: Illegal character <1>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 8, column 21 -
+Couldn't repair and continue parse at character 7 of input
 tests/open/p-thread.s
 Syntax error at line 2, column 17 {
 Couldn't repair and continue parse at character 1 of input
@@ -12,28 +9,19 @@ tests/open/n-alice.s
 Syntax error at line 1, column 33 Alice in Wonderland
 Couldn't repair and continue parse at character 0 of input
 tests/open/p-forall.s
-Exception in thread "main" java.lang.Error: Illegal character <1>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 3, column 9 ;
+Couldn't repair and continue parse at character 2 of input
 tests/open/p-while.s
 Syntax error at line 1, column 33 Alice in Wonderland
 Couldn't repair and continue parse at character 0 of input
 tests/open/p-empty-adts.s
 parsing successful
 tests/open/p-if-then-else0.s
-Exception in thread "main" java.lang.Error: Illegal character <1>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 7, column 15 -
+Couldn't repair and continue parse at character 6 of input
 tests/open/n-decl.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 6, column 7 [
+Couldn't repair and continue parse at character 5 of input
 tests/open/n-main-missing-brace.s
 Syntax error at line 2, column 2 return
 Couldn't repair and continue parse at character 1 of input
@@ -55,65 +43,33 @@ tests/open/p-seq.s
 Syntax error at line 1, column 21 a
 Couldn't repair and continue parse at character 0 of input
 tests/open/p-main-only.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 4, column 21 0
+Couldn't repair and continue parse at character 3 of input
 tests/open/p-reverse.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+parsing successful
 tests/open/n-empty-main.s
 Syntax error at line 3, column 0 }
 Couldn't repair and continue parse at character 2 of input
 tests/open/p-nested-func-decls.s
-Exception in thread "main" java.lang.Error: Illegal character <2>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+parsing successful
 tests/open/n-stray-return.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 15, column 21 0
+Couldn't repair and continue parse at character 14 of input
 tests/open/p-two-func-if.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 13, column 21 0
+Couldn't repair and continue parse at character 12 of input
 tests/open/p-nested-while.s
-Exception in thread "main" java.lang.Error: Illegal character <1>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+parsing successful
 tests/open/n-dict-unbalanced-open.s
-Exception in thread "main" java.lang.Error: Illegal character <1>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 1, column 25 :
+Couldn't repair and continue parse at character 0 of input
 tests/open/p-adt.s
 Syntax error at line 6, column 9 )
 Couldn't repair and continue parse at character 5 of input
 tests/open/p-fp.s
-Exception in thread "main" java.lang.Error: Illegal character <3>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 2, column 14 0
+Couldn't repair and continue parse at character 1 of input
 tests/open/p-rat.s
-Exception in thread "main" java.lang.Error: Illegal character <2>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
 tests/open/n-stray-elif.s
 Syntax error at line 2, column 21 bork
 Couldn't repair and continue parse at character 1 of input
@@ -124,11 +80,8 @@ tests/open/p-nested-lambda-expression.s
 Syntax error at line 2, column 24 ->
 Couldn't repair and continue parse at character 1 of input
 tests/open/n-multiple-assignment.s
-Exception in thread "main" java.lang.Error: Illegal character <5>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 3, column 7 ;
+Couldn't repair and continue parse at character 2 of input
 tests/open/n-type-stutter-in-plist.s
 Syntax error at line 5, column 29 ,
 Couldn't repair and continue parse at character 4 of input
@@ -139,17 +92,10 @@ tests/open/n-empty-else.s
 Syntax error at line 1, column 23 )
 Couldn't repair and continue parse at character 0 of input
 tests/open/p-set-ops.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+parsing successful
 tests/open/n-func-param-type-error0.s
 Syntax error at line 1, column 24 )
 Couldn't repair and continue parse at character 0 of input
 tests/open/p-func-decl-in-main.s
-Exception in thread "main" java.lang.Error: Illegal character <0>
-	at Lexer.next_token(Lexer.java:755)
-	at java_cup.runtime.lr_parser.scan(lr_parser.java:366)
-	at java_cup.runtime.lr_parser.parse(lr_parser.java:693)
-	at SC.main(SC.java:15)
+Syntax error at line 12, column 21 0
+Couldn't repair and continue parse at character 11 of input
