@@ -40,16 +40,16 @@ terminal           LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, SEMI, COLON, 
 terminal           IDENTIFIER, INT_LIT, CHAR_LIT, RAT_LIT, STRING_LIT, FLOAT_LIT;
 
 //High Level
-nonterminal        program, main, body, identifier, idWithIndex;
+nonterminal        program, main, statement_list, identifier, idWithIndex;
 
 //Declarations
-nonterminal        declaration, type_and_id, assignment, tdef, fdef, alias, lambda, set_declaration;
+nonterminal        declaration, type_and_id, var_assignment, tdef, fdef, alias, lambda, set_declaration, dict_declaration, seq_declaration;
 
 //Types
 non terminal       type, dicttype, seqtype;
 
 //Lists
-nonterminal        expression_list, declaration_list, statement_list, statements_with_break;
+nonterminal        expression_list, declaration_list, statements_with_break;
 nonterminal        arg_list, args, param_list, params;
 
 //literals
@@ -67,10 +67,10 @@ non terminal       expression, operator, multithreading;
 non terminal       print, read;
 
 //Helpers
-nonterminal        idWithIndexHelp, indexCall, field_access;
+nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper;
 
 /* ------------Precedences----------- */
-precedence nonassoc IDENTIFIER;
+precedence nonassoc IDENTIFIER, FLOAT_LIT, RAT_LIT, STRING_LIT, CHAR_LIT, INT_LIT, TRUE, FALSE;
 precedence right ASSIGN;
 precedence left OR;
 precedence left AND;
@@ -84,43 +84,67 @@ precedence nonassoc NOT;
 precedence nonassoc ARROW;
 precedence left DOT, LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
 precedence left INT, DICT, SET, SEQ, FLOAT, RAT, CHAR, BOOL, TOP;
-precedence left SEMI;
+precedence left COMMA, SEMI;
 
 start with program;
 
+//TODO
+//Declaration lists -> comma separated
+
 /* ---- Grammar ------- */
 
-program ::= declaration_list main;
+program ::= statement_list main|main;
 
-main ::= MAIN LBRACE body RBRACE SEMI;
-
-body ::= declaration_list statement_list;
+main ::= MAIN LBRACE statement_list RBRACE SEMI;
 
 //Types
-type ::= dicttype | seqtype | CHAR | INT | RAT | FLOAT | IDENTIFIER| TOP | BOOL;
-dicttype ::= DICT LT type COMMA type GT;
-seqtype ::= SEQ LT type GT;
+type ::= DICT LT type COMMA type GT
+        | SEQ LT type GT
+        | SET LT type GT
+        | CHAR
+        | INT
+        | RAT
+        | FLOAT
+        | IDENTIFIER
+        | TOP
+        | BOOL
+        ;
 
 // Expression
-operator ::= PLUS | MINUS | MULT | DIV | EXPO | AND | OR | EQ | LT | GT | LTEQ | GTEQ | NOTEQ;
+operator ::= PLUS
+//          | MINUS
+          | MULT
+          | DIV
+          | EXPO
+          | AND
+          | OR
+          | EQ
+          | LT
+          | GT
+          | LTEQ
+          | GTEQ
+          | NOTEQ
+          | CONCAT
+          | PIPE
+          | INTERSECTION
+          | DIFFERENCE
+          | IN
+          ;
 
+
+//Statements
 expression ::= expression operator expression
-             | expression CONCAT expression
-             | expression PIPE expression
-             | expression INTERSECTION expression
-             | expression DIFFERENCE expression
-             | expression IN expression
              | NOT expression
              | LPAREN expression RPAREN
-             | dict_lit
-             | seq_lit
-             | set_lit
+//             | LPAREN dictbody RPAREN
+             | LBRACE expression expression_list RBRACE //SET_LIT
+             | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
              | FALSE
              | field_access
              | function_call
-             | indexCall
-             | lambda
+             | expression indexCall
+//             | lambda
              | MINUS expression
              | FLOAT_LIT
              | INT_LIT
@@ -128,6 +152,59 @@ expression ::= expression operator expression
              | CHAR_LIT
              | IDENTIFIER
              |;
+
+statement ::= looping
+            | if_statement
+            | read SEMI
+            | print SEMI
+            | var_assignment SEMI
+            | return_statement SEMI
+            | multithreading SEMI
+            | tdef SEMI
+            | fdef SEMI
+            | set_declaration SEMI
+            | dict_declaration SEMI
+            | seq_declaration SEMI
+            | alias SEMI
+            | function_call SEMI
+            | RETURN expression SEMI
+            ;
+
+statement_with_break ::= looping
+            | if_statement_break
+            | read SEMI
+            | print SEMI
+            | var_assignment SEMI
+            | return_statement SEMI
+            | multithreading SEMI
+            | tdef SEMI
+            | fdef SEMI
+            | set_declaration SEMI
+            | dict_declaration SEMI
+            | seq_declaration SEMI
+            | alias SEMI
+            | function_call SEMI
+            | break
+            | RETURN expression SEMI
+            ;
+
+type_and_id ::= type IDENTIFIER;
+
+tdef ::= TDEF IDENTIFIER LBRACE type_and_id param_list RBRACE; //TODO add to assumptions, tdef body cannot be empty -> like C99, there is nothing you can do with it so no point
+
+fdef ::= FDEF type_and_id LPAREN type_and_id param_list RPAREN LBRACE statement_list RBRACE
+        | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN LBRACE statement_list RBRACE
+        | FUNC IDENTIFIER ASSIGN lambda
+        ;
+
+alias ::= ALIAS type_and_id; //TODO ATA, you can only type alias you cannot alias expressions
+
+lambda ::= PIPE expression expression_list PIPE ARROW expression
+        | PIPE expression expression_list PIPE ARROW LBRACE statement_list RBRACE
+        ;
+
+var_assignment ::= type_and_id ASSIGN expression| IDENTIFIER ASSIGN expression;
+
 
 field_access ::= expression DOT IDENTIFIER;
 
@@ -138,103 +215,79 @@ indexCall ::= LBRACK expression RBRACK
 
 // Values
 
-dict_lit ::= LPAREN dictbody RPAREN | LPAREN RPAREN;
-dictbody ::= expression COLON expression| expression COLON expression COMMA dictbody;
+//dict_lit ::= LPAREN dictbody RPAREN;
 
-seq_lit ::= LBRACK seqbody RBRACK
-           | LBRACK RBRACK
+seq_lit ::= LBRACK expression expression_list_helper RBRACK
            | STRING_LIT;
 
-seqbody ::= expression | expression COMMA seqbody;
-
 // Declarations
-type_and_id ::= type IDENTIFIER;
-declaration ::= type_and_id SEMI
-			  | type_and_id ASSIGN expression_list SEMI
-              | tdef
-              | set_declaration
-              | alias
-              | fdef
-              ;
 
-tdef ::= TDEF IDENTIFIER LBRACE param_list RBRACE SEMI;
-fdef ::= FDEF type_and_id LPAREN param_list RPAREN LBRACE body RBRACE SEMI
-        | FDEF IDENTIFIER LPAREN param_list RPAREN LBRACE body RBRACE SEMI
-        | FUNC IDENTIFIER ASSIGN lambda
-        ;
-
-alias ::= ALIAS type_and_id SEMI;
-
-lambda ::= PIPE param_list PIPE ARROW expression
-        | PIPE param_list PIPE ARROW LBRACE statement_list RBRACE
-        ;
-
-
-statement ::= looping
-            | if_statement
-            | read
-            | print
-            | assignment
-            | return_statement
-            | multithreading
-            ;
-
-statement_with_break ::= looping
-            | if_statement_break
-            | read
-            | break
-            | print
-            | assignment
-            | return_statement
-            | multithreading
-            ;
-
-read ::= READ IDENTIFIER SEMI;
-print ::= PRINT expression SEMI;
-return_statement ::= RETURN SEMI | RETURN expression SEMI;
-multithreading ::= THREAD IDENTIFIER ASSIGN body SEMI;
-assignment ::= type_and_id ASSIGN expression SEMI|IDENTIFIER ASSIGN expression SEMI;
+read ::= READ IDENTIFIER;
+print ::= PRINT expression;
+multithreading ::= THREAD IDENTIFIER ASSIGN statement_list;
 
 
 // Dealing with break
 break ::= BREAK SEMI | BREAK INT_LIT SEMI;
 
-body_with_break ::= declaration_list statements_with_break;
-
-
-
-if_statement ::= IF LPAREN expression RPAREN THEN body FI
-             | IF LPAREN expression RPAREN THEN body ELSE body FI
-             | IF LPAREN expression RPAREN THEN body ELIF body ELSE body FI
+if_statement ::= IF LPAREN expression RPAREN THEN statement_list FI
+             | IF LPAREN expression RPAREN THEN statement_list elif ELSE statement_list FI
              ;
 
-if_statement_break ::= IF LPAREN expression RPAREN THEN body_with_break FI
-                    | IF LPAREN expression RPAREN THEN body_with_break ELSE body_with_break FI
-                    | IF LPAREN expression RPAREN THEN body_with_break ELIF body_with_break ELSE body_with_break FI
+if_statement_break ::= IF LPAREN expression RPAREN THEN statements_with_break FI
+                    | IF LPAREN expression RPAREN THEN statements_with_break elif_break ELSE statements_with_break FI
                     ;
 
-looping ::= FORALL LPAREN expression RPAREN DO body OD
-                | WHILE expression DO body_with_break OD
+elif ::= ELIF LPAREN expression RPAREN THEN statement_list elif
+        |
+        ;
+
+elif_break ::= ELIF LPAREN expression RPAREN THEN statements_with_break elif_break
+            |
+            ;
+
+looping ::= FORALL LPAREN expression RPAREN DO statement_list OD
+                | WHILE expression DO statements_with_break OD
                 ;
 
+//Declarations
+
+set_declaration ::= SET LT type GT IDENTIFIER
+                | SET LT type GT IDENTIFIER ASSIGN expression
+                ;
+
+dict_declaration ::= DICT LT type COMMA type GT IDENTIFIER;
+
+seq_declaration ::= SEQ LT type GT IDENTIFIER;
+
+
 // Functions
+function_call ::= IDENTIFIER LPAREN expression expression_list RPAREN;
 
 
-function_call ::= IDENTIFIER LPAREN expression_list RPAREN SEMI;
 
-set_declaration ::= SET LT type GT IDENTIFIER;
-set_lit ::= LBRACE RBRACE
-    | LBRACE expression_list RBRACE
-    ;
+// Literals
+
+//dict_lit ::= LPAREN expression COLON expression dictbody RPAREN
+//          | LPAREN RPAREN
+//          ;
 
 //Lists
+param_list_helper ::= type_and_id param_list;
+param_list ::= COMMA param_list_helper
+            |
+            ;
 
-params ::= type_and_id | type_and_id COMMA params;
-param_list ::= params |;
+dictbody_helper ::= expression COLON expression dictbody |;
+dictbody ::= COMMA dictbody_helper
+    |
+    ;
 
-declaration_list ::= declaration declaration_list|;
-
-statement_list ::= statement statement_list | statement;
 statements_with_break ::= statement_with_break statements_with_break | statement_with_break;
+statement_list ::= statement statement_list | statement;
 
-expression_list ::= expression | expression COMMA expression_list;
+expression_list_helper ::= expression expression_list;
+expression_list ::= COMMA expression_list_helper
+    |
+    ;
+
