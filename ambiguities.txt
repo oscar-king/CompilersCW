@@ -1,0 +1,11 @@
+Paragraph: 21
+Problem: The spec uses "=" as an assignment operator.
+My solution: I think this is a mistake because in most of the spec and all the sample code ":=" is used for assignment. Therefore "=" is not accepted.
+
+Paragraph: 8
+Problem: It is unclear whether all numbers can be defined with underscores e.g. 1_000_000
+My solution: Because a lot of programming languages offer implicit conversion and 1_000/1 is equivalent to 1000, I will allow underscores in both integers and floats as well.
+
+Paragraph: 10
+Problem: It is unclear whether I should accept strings with unescaped newlines or form feeds.
+My solution: To keep thing simple and because the spec did not say they should be included, string cannot include a newline or formfeed.
