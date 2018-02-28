@@ -129,6 +129,7 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
+          | DOT
           ;
 
 
@@ -141,7 +142,7 @@ expression ::= expression operator expression
              | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
              | FALSE
-             | field_access
+//             | expression DOT IDENTIFIER
              | function_call
              | expression indexCall
 //             | lambda
@@ -158,6 +159,7 @@ statement ::= looping
             | if_statement
             | read SEMI
             | print SEMI
+            | type_and_id SEMI
             | var_assignment SEMI
             | return_statement SEMI
             | multithreading SEMI
@@ -175,6 +177,7 @@ statement_with_break ::= looping
             | if_statement_break
             | read SEMI
             | print SEMI
+            | type_and_id SEMI
             | var_assignment SEMI
             | return_statement SEMI
             | multithreading SEMI
@@ -195,6 +198,8 @@ tdef ::= TDEF IDENTIFIER LBRACE type_and_id param_list RBRACE; //TODO add to ass
 
 fdef ::= FDEF type_and_id LPAREN type_and_id param_list RPAREN lbrace_statement_list
         | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN lbrace_statement_list
+        | FDEF IDENTIFIER LPAREN RPAREN lbrace_statement_list
+        | FDEF type_and_id IDENTIFIER LPAREN RPAREN lbrace_statement_list
         | FUNC IDENTIFIER ASSIGN lambda
         ;
 
@@ -204,10 +209,9 @@ lambda ::= PIPE expression expression_list PIPE ARROW expression
         | PIPE expression expression_list PIPE ARROW LBRACE statement_list RBRACE
         ;
 
-var_assignment ::= type_and_id ASSIGN expression| IDENTIFIER ASSIGN expression;
+var_assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
 
 
-field_access ::= expression DOT IDENTIFIER;
 
 // Collection accessing
 indexCall ::= LBRACK expression RBRACK

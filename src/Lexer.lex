@@ -25,7 +25,7 @@ WhiteSpace     = {LineTerminator} | [\t\f]|" "
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment}
-TraditionalComment   = "/*" ~"*/" | "/#" "#/"
+TraditionalComment   = "/#" ~"#/" | "/#" "#/"
 
 // Comment can be the last line of the file, without line terminator.
 EndOfLineComment     = "#" {InputCharacter}* {LineTerminator}?
@@ -42,8 +42,8 @@ Boolean = T|F
 
 PosInteger = [1-9]({Digit}|[_])*{Digit}
 Integer = [1-9]([0-9]|[_])*|0
-Float = {Integer}"."{PosInteger}
-Rat = {Integer}"/"{PosInteger}
+Float = {Integer}[.]{PosInteger}
+Rat = {Integer}[/]{PosInteger}
 
 %state STRING
 
@@ -141,14 +141,14 @@ Rat = {Integer}"/"{PosInteger}
     ";"                            { return symbol(sym.SEMI); }
     ":"                            { return symbol(sym.COLON); }
     ","                            { return symbol(sym.COMMA); }
-    "."                            { return symbol(sym.DOT); }
+    "\."                            { return symbol(sym.DOT); }
 
     /* literals */
-    {Identifier}                   { return symbol(sym.IDENTIFIER, yytext()); }
-    {Character}                    { return symbol(sym.CHAR_LIT, yytext()); }
-    {Integer}                      { return symbol(sym.INT_LIT, Integer.parseInt(yytext())); }
-    {Float}                        { return symbol(sym.FLOAT_LIT, Float.parseFloat(yytext())); }
-    {Rat}                          { return symbol(sym.RAT_LIT, yytext()); }
+    {Identifier}                   { return symbol(sym.IDENTIFIER); }
+    {Character}                    { return symbol(sym.CHAR_LIT); }
+    {Integer}                      { return symbol(sym.INT_LIT); }
+    {Float}                        { return symbol(sym.FLOAT_LIT); }
+    {Rat}                          { return symbol(sym.RAT_LIT); }
     \"                             { string.setLength(0); yybegin(STRING); }
     {Comment}                      { /* ignore */ }
     {WhiteSpace}                   { /* ignore */ }
