@@ -67,7 +67,7 @@ non terminal       expression, operator, multithreading;
 non terminal       print, read;
 
 //Helpers
-nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper;
+nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
 
 /* ------------Precedences----------- */
 precedence nonassoc IDENTIFIER, FLOAT_LIT, RAT_LIT, STRING_LIT, CHAR_LIT, INT_LIT, TRUE, FALSE;
@@ -112,7 +112,7 @@ type ::= DICT LT type COMMA type GT
 
 // Expression
 operator ::= PLUS
-//          | MINUS
+          | MINUS
           | MULT
           | DIV
           | EXPO
@@ -149,6 +149,7 @@ expression ::= expression operator expression
              | FLOAT_LIT
              | INT_LIT
              | RAT_LIT
+             | STRING_LIT
              | CHAR_LIT
              | IDENTIFIER
              |;
@@ -192,8 +193,8 @@ type_and_id ::= type IDENTIFIER;
 
 tdef ::= TDEF IDENTIFIER LBRACE type_and_id param_list RBRACE; //TODO add to assumptions, tdef body cannot be empty -> like C99, there is nothing you can do with it so no point
 
-fdef ::= FDEF type_and_id LPAREN type_and_id param_list RPAREN LBRACE statement_list RBRACE
-        | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN LBRACE statement_list RBRACE
+fdef ::= FDEF type_and_id LPAREN type_and_id param_list RPAREN lbrace_statement_list
+        | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN lbrace_statement_list
         | FUNC IDENTIFIER ASSIGN lambda
         ;
 
@@ -224,7 +225,7 @@ seq_lit ::= LBRACK expression expression_list_helper RBRACK
 
 read ::= READ IDENTIFIER;
 print ::= PRINT expression;
-multithreading ::= THREAD IDENTIFIER ASSIGN statement_list;
+multithreading ::= THREAD IDENTIFIER ASSIGN lbrace_statement_list;
 
 
 // Dealing with break
@@ -291,3 +292,4 @@ expression_list ::= COMMA expression_list_helper
     |
     ;
 
+lbrace_statement_list ::= LBRACE statement_list RBRACE;
