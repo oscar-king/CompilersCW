@@ -42,7 +42,7 @@ Boolean = T|F
 
 PosInteger = [1-9]({Digit}|[_])*{Digit}
 Integer = [1-9]([0-9]|[_])*|0
-Float = {Integer}[.]{PosInteger}
+Float = (([1-9]([0-9]|[_])*)|0)([.]([0-9]|[_])*)
 Rat = {Integer}[/]{PosInteger}
 
 %state STRING

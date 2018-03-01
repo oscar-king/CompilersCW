@@ -8,4 +8,8 @@ My solution: Because a lot of programming languages offer implicit conversion an
 
 Paragraph: 10
 Problem: It is unclear whether I should accept strings with unescaped newlines or form feeds.
-My solution: To keep thing simple and because the spec did not say they should be included, string cannot include a newline or formfeed.
+My solution: To keep things simple and because the spec did not say they should be included, string cannot include a newline or formfeed.
+
+Paragraph: 25
+Problem: the p-reverse.s test returns a value: b. The main method should not return a value.
+My solution: To adhere to the specification although this is a positive test, my compiler does not accept this syntax.
