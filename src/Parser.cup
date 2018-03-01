@@ -142,7 +142,7 @@ expression ::= expression operator expression
              | FALSE
              | function_call
              | expression indexCall
-//             | lambda
+             | lambda
              | MINUS expression
              | FLOAT_LIT
              | INT_LIT
@@ -166,6 +166,7 @@ base_statement ::= looping
                 | seq_declaration SEMI
                 | alias SEMI
                 | function_call SEMI
+                | lambda SEMI
                 ;
 
 main_statement ::= base_statement
@@ -198,7 +199,7 @@ fdef ::= FDEF IDENTIFIER LPAREN RPAREN lbrace_statement_list
 alias ::= ALIAS type_and_id; //TODO ATA, you can only type alias you cannot alias expressions
 
 lambda ::= PIPE expression expression_list PIPE ARROW expression
-        | PIPE expression expression_list PIPE ARROW LBRACE statement_list RBRACE
+        | PIPE expression expression_list PIPE ARROW lbrace_statement_list
         ;
 
 var_assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
