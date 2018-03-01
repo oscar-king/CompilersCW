@@ -72,8 +72,7 @@ tests/open/p-elif.s
 Syntax error at line 15, column 2 fi
 Couldn't repair and continue parse at character 14 of input
 tests/open/p-nested-lambda-expression.s
-Syntax error at line 2, column 24 ->
-Couldn't repair and continue parse at character 1 of input
+parsing successful
 tests/open/n-multiple-assignment.s
 Syntax error at line 5, column 9 :=
 Couldn't repair and continue parse at character 4 of input

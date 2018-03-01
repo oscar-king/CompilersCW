@@ -64,7 +64,7 @@ non terminal       dictbody, seqbody, statement, base_statement, statement_list_
 non terminal       expression, operator, multithreading;
 
 //Functions
-non terminal       print, read;
+non terminal       print, read, id_list_helper, id_list;
 
 //Helpers
 nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
@@ -198,8 +198,8 @@ fdef ::= FDEF IDENTIFIER LPAREN RPAREN lbrace_statement_list
 
 alias ::= ALIAS type_and_id; //TODO ATA, you can only type alias you cannot alias expressions
 
-lambda ::= PIPE expression expression_list PIPE ARROW expression
-        | PIPE expression expression_list PIPE ARROW lbrace_statement_list
+lambda ::= PIPE IDENTIFIER id_list PIPE ARROW expression
+        | PIPE IDENTIFIER id_list PIPE ARROW lbrace_statement_list
         ;
 
 var_assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
@@ -292,3 +292,8 @@ expression_list ::= COMMA expression_list_helper
     ;
 
 lbrace_statement_list ::= LBRACE statement_list RBRACE;
+
+id_list_helper ::= IDENTIFIER id_list |;
+id_list ::= COMMA id_list_helper
+          |
+          ;
