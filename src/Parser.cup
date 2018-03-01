@@ -43,7 +43,7 @@ terminal           IDENTIFIER, INT_LIT, CHAR_LIT, RAT_LIT, STRING_LIT, FLOAT_LIT
 nonterminal        program, main, statement_list, identifier, idWithIndex;
 
 //Declarations
-nonterminal        declaration, type_and_id, var_assignment, tdef, fdef, alias, lambda, set_declaration, dict_declaration, seq_declaration;
+nonterminal        declaration, type_and_id, assignment, tdef, fdef, alias, lambda, set_declaration, dict_declaration, seq_declaration;
 
 //Types
 non terminal       type, dicttype, seqtype;
@@ -70,7 +70,6 @@ non terminal       print, read, id_list_helper, id_list;
 nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
 
 /* ------------Precedences----------- */
-//precedence right ASSIGN;
 precedence left OR;
 precedence left AND;
 precedence nonassoc EQ, NOTEQ;
@@ -83,7 +82,8 @@ precedence nonassoc NOT;
 precedence right ARROW;
 precedence left LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
 precedence right INT, DICT, SET, SEQ, FLOAT, RAT, CHAR, BOOL, TOP;
-precedence left COMMA, SEMI, DOT;
+precedence left COMMA, SEMI;
+precedence right DOT;
 
 start with program;
 
@@ -127,7 +127,7 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
-          | DOT
+//          | DOT
           ;
 
 
@@ -140,6 +140,7 @@ expression ::= expression operator expression
              | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
              | FALSE
+//             | expression DOT IDENTIFIER
              | function_call
              | expression indexCall
              | lambda
@@ -157,13 +158,10 @@ base_statement ::= looping
                 | print SEMI
                 | return_statement SEMI
                 | type_and_id SEMI
-                | var_assignment SEMI
+                | assignment SEMI
                 | multithreading SEMI
                 | tdef SEMI
                 | fdef SEMI
-                | set_declaration SEMI
-                | dict_declaration SEMI
-                | seq_declaration SEMI
                 | alias SEMI
                 | function_call SEMI
                 | lambda SEMI
@@ -202,7 +200,7 @@ lambda ::= PIPE IDENTIFIER id_list PIPE ARROW expression
         | PIPE IDENTIFIER id_list PIPE ARROW lbrace_statement_list
         ;
 
-var_assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
+assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
 
 
 
@@ -211,12 +209,6 @@ indexCall ::= LBRACK expression RBRACK
     | LBRACK expression COLON expression RBRACK
     ;
 
-// Values
-
-//dict_lit ::= LPAREN dictbody RPAREN;
-
-seq_lit ::= LBRACK expression expression_list_helper RBRACK
-           | STRING_LIT;
 
 // Declarations
 
@@ -248,17 +240,6 @@ looping ::= FORALL LPAREN expression RPAREN DO statement_list OD
                 | WHILE expression DO statement_list_with_break OD
                 ;
 
-//Declarations
-
-set_declaration ::= SET LT type GT IDENTIFIER
-                | SET LT type GT IDENTIFIER ASSIGN expression
-                ;
-
-dict_declaration ::= DICT LT type COMMA type GT IDENTIFIER;
-
-seq_declaration ::= SEQ LT type GT IDENTIFIER;
-
-
 // Functions
 function_call ::= IDENTIFIER LPAREN expression expression_list RPAREN;
 
@@ -266,25 +247,15 @@ function_call ::= IDENTIFIER LPAREN expression expression_list RPAREN;
 
 // Literals
 
-//dict_lit ::= LPAREN expression COLON expression dictbody RPAREN
-//          | LPAREN RPAREN
-//          ;
-
 //Lists
 param_list_helper ::= type_and_id param_list;
 param_list ::= COMMA param_list_helper
             |
             ;
 
-dictbody_helper ::= expression COLON expression dictbody |;
-dictbody ::= COMMA dictbody_helper
-    |
-    ;
-
 statement_list_with_break ::= statement_with_break statement_list_with_break | statement_with_break;
 statement_list ::= statement statement_list | statement;
 statement_list_main ::= main_statement statement_list_main | main_statement;
-declaration_list ::= declaration declaration_list | declaration;
 
 expression_list_helper ::= expression expression_list;
 expression_list ::= COMMA expression_list_helper
