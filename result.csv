@@ -69,8 +69,7 @@ tests/open/n-stray-elif.s
 Syntax error at line 4, column 2 elif
 Couldn't repair and continue parse at character 3 of input
 tests/open/p-elif.s
-Syntax error at line 15, column 2 fi
-Couldn't repair and continue parse at character 14 of input
+parsing successful
 tests/open/p-nested-lambda-expression.s
 parsing successful
 tests/open/n-multiple-assignment.s

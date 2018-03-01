@@ -127,7 +127,6 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
-//          | DOT
           ;
 
 
@@ -140,7 +139,7 @@ expression ::= expression operator expression
              | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
              | FALSE
-//             | expression DOT IDENTIFIER
+             | expression DOT IDENTIFIER
              | function_call
              | expression indexCall
              | lambda
@@ -220,11 +219,11 @@ multithreading ::= THREAD IDENTIFIER ASSIGN lbrace_statement_list;
 // Dealing with break
 break ::= BREAK SEMI | BREAK INT_LIT SEMI;
 
-if_statement ::= IF LPAREN expression RPAREN THEN statement_list FI
+if_statement ::= IF LPAREN expression RPAREN THEN statement_list elif FI
              | IF LPAREN expression RPAREN THEN statement_list elif ELSE statement_list FI
              ;
 
-if_statement_break ::= IF LPAREN expression RPAREN THEN statement_list_with_break FI
+if_statement_break ::= IF LPAREN expression RPAREN THEN statement_list_with_break  elif_break FI
                     | IF LPAREN expression RPAREN THEN statement_list_with_break elif_break ELSE statement_list_with_break FI
                     ;
 

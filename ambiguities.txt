@@ -14,5 +14,6 @@ Paragraph: 25
 Problem: the p-reverse.s test returns a value: b. The main method should not return a value.
 My solution: To adhere to the specification although this is a positive test, my compiler does not accept this syntax.
 
-Paragraph: 17
-Problem:
+Paragraph: 15
+Problem: Not sure if tdef body can be empty
+Solution: Take C99 standard and not allow an empty tdef
