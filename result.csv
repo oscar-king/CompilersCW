@@ -29,11 +29,10 @@ tests/open/n-fib.s
 Syntax error at line 6, column 0 fdef
 Couldn't repair and continue parse at character 5 of input
 tests/open/p-alice.s
-Syntax error at line 5, column 16 )
-Couldn't repair and continue parse at character 4 of input
+parsing successful
 tests/open/n-no-main.s
-Syntax error at line 20, column 16 )
-Couldn't repair and continue parse at character 19 of input
+Syntax error at line 0, column -1 null
+Couldn't repair and continue parse
 tests/open/p-seq.s
 parsing successful
 tests/open/p-main-only.s

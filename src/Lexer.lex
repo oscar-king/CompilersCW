@@ -41,9 +41,9 @@ Identifier = ({Letter})({Letter}|{Digit}|"_")*
 Boolean = T|F
 
 PosInteger = [1-9]({Digit}|[_])*{Digit}
-Integer = [1-9]([0-9]|[_])*|0
+Integer = ([1-9]([0-9]|[_])*)|0
 Float = (([1-9]([0-9]|[_])*)|0)([.]([0-9]|[_])*)
-Rat = {Integer}[/]{PosInteger}
+Rat = {Integer}[/]{PosInteger} // ([1-9]([0-9]|[_])*|0)[/](([1-9]|[_])([0-9]|[_])*)
 
 %state STRING
 

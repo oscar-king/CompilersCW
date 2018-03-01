@@ -2,7 +2,7 @@ string s1 := "Alice in Wonderland";
 string s2 := "Gilgamesh";
 string s3 := "One Thousand and One Nights";
 
-fdef int alice () {
+fdef int alice() {
   return 5;
 } ;
 

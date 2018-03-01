@@ -70,8 +70,7 @@ non terminal       print, read;
 nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
 
 /* ------------Precedences----------- */
-precedence nonassoc IDENTIFIER, FLOAT_LIT, RAT_LIT, STRING_LIT, CHAR_LIT, INT_LIT, TRUE, FALSE;
-precedence right ASSIGN;
+//precedence right ASSIGN;
 precedence left OR;
 precedence left AND;
 precedence nonassoc EQ, NOTEQ;
@@ -81,14 +80,14 @@ precedence right PLUS, MINUS;
 precedence left  MULT, DIV;
 precedence right IN, EXPO;
 precedence nonassoc NOT;
-precedence nonassoc ARROW;
-precedence left DOT, LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
-precedence left INT, DICT, SET, SEQ, FLOAT, RAT, CHAR, BOOL, TOP;
-precedence left COMMA, SEMI;
+precedence right ARROW;
+precedence left LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
+precedence right INT, DICT, SET, SEQ, FLOAT, RAT, CHAR, BOOL, TOP;
+precedence left COMMA, SEMI, DOT;
 
 start with program;
 
-//TODO 1. Floats and rats dont seem to get parsed properly 2. nested elifs 3. nested lambdas 4. LPAREN and RPAREN issue
+//TODO 2. nested elifs 3. nested lambdas 4. LPAREN and RPAREN issue 5. fix issue that some statements should not be made outside function
 
 /* ---- Grammar ------- */
 
@@ -128,7 +127,7 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
-//          | DOT
+          | DOT
           ;
 
 
@@ -141,7 +140,6 @@ expression ::= expression operator expression
              | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
              | FALSE
-             | IDENTIFIER DOT IDENTIFIER
              | function_call
              | expression indexCall
 //             | lambda
@@ -155,20 +153,20 @@ expression ::= expression operator expression
              |;
 
 base_statement ::= looping
-               | read SEMI
-               | print SEMI
-               | type_and_id SEMI
-               | var_assignment SEMI
-               | return_statement SEMI
-               | multithreading SEMI
-               | tdef SEMI
-               | fdef SEMI
-               | set_declaration SEMI
-               | dict_declaration SEMI
-               | seq_declaration SEMI
-               | alias SEMI
-               | function_call SEMI
-               ;
+                | read SEMI
+                | print SEMI
+                | return_statement SEMI
+                | type_and_id SEMI
+                | var_assignment SEMI
+                | multithreading SEMI
+                | tdef SEMI
+                | fdef SEMI
+                | set_declaration SEMI
+                | dict_declaration SEMI
+                | seq_declaration SEMI
+                | alias SEMI
+                | function_call SEMI
+                ;
 
 main_statement ::= base_statement
                 | if_statement
@@ -191,7 +189,7 @@ type_and_id ::= type IDENTIFIER;
 tdef ::= TDEF IDENTIFIER LBRACE type_and_id param_list RBRACE; //TODO add to assumptions, tdef body cannot be empty -> like C99, there is nothing you can do with it so no point
 
 fdef ::= FDEF IDENTIFIER LPAREN RPAREN lbrace_statement_list
-        | FDEF type_and_id IDENTIFIER LPAREN RPAREN lbrace_statement_list
+        | FDEF type_and_id LPAREN RPAREN lbrace_statement_list
         | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN lbrace_statement_list
         | FDEF type_and_id LPAREN type_and_id param_list RPAREN lbrace_statement_list
         | FUNC IDENTIFIER ASSIGN lambda
@@ -285,6 +283,7 @@ dictbody ::= COMMA dictbody_helper
 statement_list_with_break ::= statement_with_break statement_list_with_break | statement_with_break;
 statement_list ::= statement statement_list | statement;
 statement_list_main ::= main_statement statement_list_main | main_statement;
+declaration_list ::= declaration declaration_list | declaration;
 
 expression_list_helper ::= expression expression_list;
 expression_list ::= COMMA expression_list_helper
