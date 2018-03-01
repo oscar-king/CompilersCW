@@ -91,7 +91,7 @@ start with program;
 
 /* ---- Grammar ------- */
 
-program ::= statement_list main|main;
+program ::= declaration_list main|main;
 
 main ::= MAIN LBRACE statement_list_main RBRACE SEMI;
 
@@ -152,16 +152,19 @@ expression ::= expression operator expression
              | IDENTIFIER
              |;
 
+declaration ::= type_and_id SEMI
+            | assignment SEMI
+            | multithreading SEMI
+            | tdef SEMI
+            | fdef SEMI
+            | alias SEMI
+            ;
+
 base_statement ::= looping
                 | read SEMI
                 | print SEMI
                 | return_statement SEMI
-                | type_and_id SEMI
-                | assignment SEMI
-                | multithreading SEMI
-                | tdef SEMI
-                | fdef SEMI
-                | alias SEMI
+                | declaration
                 | function_call SEMI
                 | lambda SEMI
                 ;
@@ -260,6 +263,8 @@ expression_list_helper ::= expression expression_list;
 expression_list ::= COMMA expression_list_helper
     |
     ;
+
+declaration_list ::= declaration declaration_list | declaration ;
 
 lbrace_statement_list ::= LBRACE statement_list RBRACE;
 
