@@ -38,8 +38,7 @@ parsing successful
 tests/open/p-main-only.s
 parsing successful
 tests/open/p-reverse.s
-Syntax error at line 14, column 8 b
-Couldn't repair and continue parse at character 13 of input
+parsing successful
 tests/open/n-empty-main.s
 Syntax error at line 3, column 0 }
 Couldn't repair and continue parse at character 2 of input
@@ -53,11 +52,10 @@ parsing successful
 tests/open/p-nested-while.s
 parsing successful
 tests/open/n-dict-unbalanced-open.s
-Syntax error at line 1, column 25 :
-Couldn't repair and continue parse at character 0 of input
+Syntax error at line 4, column 64 ;
+Couldn't repair and continue parse at character 3 of input
 tests/open/p-adt.s
-Syntax error at line 22, column 3 .
-Couldn't repair and continue parse at character 21 of input
+parsing successful
 tests/open/p-fp.s
 parsing successful
 tests/open/p-rat.s

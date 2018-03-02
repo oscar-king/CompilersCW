@@ -53,7 +53,7 @@ nonterminal        expression_list, declaration_list, statement_list_with_break;
 nonterminal        arg_list, args, param_list, params;
 
 //literals
-non terminal       dict_lit, seq_lit, boolean, number, set_lit;
+non terminal       dict_lit, seq_lit, boolean, number, set_lit, body;
 
 //Loops
 non terminal       do, forall, while, break,  do_with_break, looping;
@@ -61,10 +61,10 @@ non terminal       do, forall, while, break,  do_with_break, looping;
 //Statements and expressions
 non terminal       function_call, return_type, if_statement, if_statement_break,return_statement, statement_with_break, body_with_break;
 non terminal       dictbody, seqbody, statement, base_statement, statement_list_main, main_statement;
-non terminal       expression, operator, multithreading;
+non terminal       expression, operator, multithreading, assignment_dec, assignment_stat, function_call_stat;
 
 //Functions
-non terminal       print, read, id_list_helper, id_list;
+non terminal       print, read, id_list_helper, id_list, identifier_list, dict_element, dict_element_list, base_expressions;
 
 //Helpers
 nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
@@ -76,24 +76,24 @@ precedence nonassoc EQ, NOTEQ;
 precedence nonassoc LT, LTEQ, GT, GTEQ;
 precedence left CONCAT, PIPE, DIFFERENCE, INTERSECTION;
 precedence right PLUS, MINUS;
+precedence right IDENTIFIER;
 precedence left  MULT, DIV;
 precedence right IN, EXPO;
 precedence nonassoc NOT;
 precedence right ARROW;
 precedence left LPAREN, RPAREN, LBRACK, RBRACK, LBRACE, RBRACE;
-precedence right INT, DICT, SET, SEQ, FLOAT, RAT, CHAR, BOOL, TOP;
-precedence left COMMA, SEMI;
 precedence right DOT;
+precedence left COMMA, SEMI;
 
 start with program;
 
-//TODO 2. nested elifs 3. nested lambdas 4. LPAREN and RPAREN issue 5. fix issue that some statements should not be made outside function
+//TODO
 
 /* ---- Grammar ------- */
 
-program ::= declaration_list main|main;
+program ::= declaration_list main;
 
-main ::= MAIN LBRACE statement_list_main RBRACE SEMI;
+main ::= MAIN LBRACE body RBRACE SEMI;
 
 //Types
 type ::= DICT LT type COMMA type GT
@@ -108,7 +108,6 @@ type ::= DICT LT type COMMA type GT
         | BOOL
         ;
 
-// Expression
 operator ::= PLUS
           | MINUS
           | MULT
@@ -127,97 +126,115 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
-//          | DOT
+//          | COLON
           ;
 
+//Literals
 
-//Statements
+base_expressions ::=set_lit
+                    | dict_lit
+                    | seq_lit
+                    | FLOAT_LIT
+                    | INT_LIT
+                    | RAT_LIT
+                    | STRING_LIT
+                    | CHAR_LIT
+                    | IDENTIFIER
+                    | TRUE
+                    | FALSE
+                    ;
+
+dict_lit ::= LPAREN dict_element_list RPAREN
+            | LPAREN RPAREN
+            ;
+
+seq_lit ::= LBRACK expression_list RBRACK
+            | LBRACK RBRACK
+            ;
+
+set_lit ::= LBRACE expression_list RBRACE
+            | LBRACE RBRACE
+            ;
+
+//Expression
 expression ::= expression operator expression
              | NOT expression
-             | LPAREN expression expression_list RPAREN
-             | LBRACE expression expression_list RBRACE //SET_LIT
-             | LBRACK expression expression_list RBRACK //SEQ_LIT
-             | TRUE
-             | FALSE
-             | expression DOT IDENTIFIER
              | function_call
+             | base_expressions
+             | LPAREN expression RPAREN
+             | expression DOT IDENTIFIER
              | expression indexCall
              | lambda
              | MINUS expression
-             | FLOAT_LIT
-             | INT_LIT
-             | RAT_LIT
-             | STRING_LIT
-             | CHAR_LIT
-             | IDENTIFIER
-             |;
+             ;
 
+// Collection accessing -> expressions
+indexCall ::= LBRACK expression RBRACK
+    | LBRACK expression COLON expression RBRACK
+    | LBRACK COLON expression RBRACK
+    | LBRACK expression COLON RBRACK
+    | LBRACK COLON RBRACK
+    ;
+
+//Statements
 declaration ::= type_and_id SEMI
-            | assignment SEMI
+            | assignment_dec SEMI
             | multithreading SEMI
             | tdef SEMI
             | fdef SEMI
             | alias SEMI
             ;
 
+read ::= READ IDENTIFIER;
+print ::= PRINT expression;
+multithreading ::= THREAD IDENTIFIER ASSIGN LBRACE body RBRACE;
+
 base_statement ::= looping
                 | read SEMI
                 | print SEMI
+                | assignment_stat SEMI
+                | function_call_stat
                 | return_statement SEMI
-                | declaration
-                | function_call SEMI
-                | lambda SEMI
                 ;
 
-main_statement ::= base_statement
-                | if_statement
-                | RETURN SEMI
-                ;
+function_call_stat ::= IDENTIFIER LPAREN RPAREN SEMI
+                    | IDENTIFIER LPAREN expression_list RPAREN SEMI
+                    ;
+
+return_statement ::= RETURN expression
+                    | RETURN
+                    ;
 
 statement ::= base_statement
             | if_statement
-            | RETURN expression SEMI
             ;
 
 statement_with_break ::= base_statement
             | if_statement_break
             | break
-            | RETURN expression SEMI
             ;
 
 type_and_id ::= type IDENTIFIER;
 
 tdef ::= TDEF IDENTIFIER LBRACE type_and_id param_list RBRACE; //TODO add to assumptions, tdef body cannot be empty -> like C99, there is nothing you can do with it so no point
 
-fdef ::= FDEF IDENTIFIER LPAREN RPAREN lbrace_statement_list
-        | FDEF type_and_id LPAREN RPAREN lbrace_statement_list
-        | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN lbrace_statement_list
-        | FDEF type_and_id LPAREN type_and_id param_list RPAREN lbrace_statement_list
+fdef ::= FDEF IDENTIFIER LPAREN RPAREN LBRACE body RBRACE
+        | FDEF type_and_id LPAREN RPAREN LBRACE body RBRACE
+        | FDEF IDENTIFIER LPAREN type_and_id param_list RPAREN LBRACE body RBRACE
+        | FDEF type_and_id LPAREN type_and_id param_list RPAREN LBRACE body RBRACE
         | FUNC IDENTIFIER ASSIGN lambda
         ;
 
 alias ::= ALIAS type_and_id; //TODO ATA, you can only type alias you cannot alias expressions
 
 lambda ::= PIPE IDENTIFIER id_list PIPE ARROW expression
-        | PIPE IDENTIFIER id_list PIPE ARROW lbrace_statement_list
+        | PIPE IDENTIFIER id_list PIPE ARROW LBRACE statement_list RBRACE
         ;
 
-assignment ::= type_and_id ASSIGN expression expression_list| IDENTIFIER ASSIGN expression expression_list;
+assignment_dec ::= type IDENTIFIER ASSIGN expression_list;
+assignment_stat ::= identifier_list ASSIGN expression_list;
 
-
-
-// Collection accessing
-indexCall ::= LBRACK expression RBRACK
-    | LBRACK expression COLON expression RBRACK
-    ;
-
-
-// Declarations
-
-read ::= READ IDENTIFIER;
-print ::= PRINT expression;
-multithreading ::= THREAD IDENTIFIER ASSIGN lbrace_statement_list;
-
+identifier_list ::= IDENTIFIER | IDENTIFIER DOT identifier_list; //| identifier_list LBRACK expression RBRACK;
 
 // Dealing with break
 break ::= BREAK SEMI | BREAK INT_LIT SEMI;
@@ -239,15 +256,14 @@ elif_break ::= ELIF LPAREN expression RPAREN THEN statement_list_with_break elif
             ;
 
 looping ::= FORALL LPAREN expression RPAREN DO statement_list OD
-                | WHILE expression DO statement_list_with_break OD
-                ;
+        | WHILE expression DO statement_list_with_break OD
+        ;
 
 // Functions
-function_call ::= IDENTIFIER LPAREN expression expression_list RPAREN;
+function_call ::= IDENTIFIER LPAREN expression_list RPAREN
+                | IDENTIFIER LPAREN RPAREN
+                ;
 
-
-
-// Literals
 
 //Lists
 param_list_helper ::= type_and_id param_list;
@@ -257,18 +273,23 @@ param_list ::= COMMA param_list_helper
 
 statement_list_with_break ::= statement_with_break statement_list_with_break | statement_with_break;
 statement_list ::= statement statement_list | statement;
-statement_list_main ::= main_statement statement_list_main | main_statement;
+//statement_list_main ::= main_statement statement_list_main | main_statement;
 
-expression_list_helper ::= expression expression_list;
-expression_list ::= COMMA expression_list_helper
-    |
+expression_list_helper ::= COMMA expression expression_list_helper|;
+expression_list ::= expression expression_list_helper
     ;
 
-declaration_list ::= declaration declaration_list | declaration ;
 
-lbrace_statement_list ::= LBRACE statement_list RBRACE;
+declaration_list ::= declaration_list declaration | ;
+
+//lbrace_statement_list ::= LBRACE statement_list RBRACE;
 
 id_list_helper ::= IDENTIFIER id_list |;
 id_list ::= COMMA id_list_helper
           |
           ;
+
+dictbody_helper ::= COMMA dict_element_list|;
+dict_element_list ::= expression COLON expression dictbody_helper;
+
+body ::= declaration_list statement_list;
