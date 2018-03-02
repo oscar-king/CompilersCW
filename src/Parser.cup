@@ -127,14 +127,14 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
+//          | DOT
           ;
 
 
 //Statements
 expression ::= expression operator expression
              | NOT expression
-             | LPAREN expression RPAREN
-//             | LPAREN dictbody RPAREN
+             | LPAREN expression expression_list RPAREN
              | LBRACE expression expression_list RBRACE //SET_LIT
              | LBRACK expression expression_list RBRACK //SEQ_LIT
              | TRUE
