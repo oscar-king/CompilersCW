@@ -10,10 +10,6 @@ Paragraph: 10
 Problem: It is unclear whether I should accept strings with unescaped newlines or form feeds.
 My solution: To keep things simple and because the spec did not say they should be included, string cannot include a newline or formfeed.
 
-Paragraph: 25
-Problem: the p-reverse.s test returns a value: b. The main method should not return a value.
-My solution: To adhere to the specification although this is a positive test, my compiler does not accept this syntax.
-
 Paragraph: 15
 Problem: Not sure if tdef body can be empty
 Solution: Take C99 standard and not allow an empty tdef
