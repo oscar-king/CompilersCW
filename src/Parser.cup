@@ -40,34 +40,34 @@ terminal           LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, SEMI, COLON, 
 terminal           IDENTIFIER, INT_LIT, CHAR_LIT, RAT_LIT, STRING_LIT, FLOAT_LIT;
 
 //High Level
-nonterminal        program, main, statement_list, identifier, idWithIndex;
+nonterminal        program, main, statement_list;
 
 //Declarations
-nonterminal        declaration, type_and_id, assignment, tdef, fdef, alias, lambda, set_declaration, dict_declaration, seq_declaration;
+nonterminal        declaration, type_and_id, tdef, fdef, alias, lambda;
 
 //Types
-non terminal       type, dicttype, seqtype;
+non terminal       type;
 
 //Lists
 nonterminal        expression_list, declaration_list, statement_list_with_break;
-nonterminal        arg_list, args, param_list, params;
+nonterminal        param_list;
 
 //literals
-non terminal       dict_lit, seq_lit, boolean, number, set_lit, body;
+non terminal       dict_lit, seq_lit, set_lit, body;
 
 //Loops
-non terminal       do, forall, while, break,  do_with_break, looping;
+non terminal       break, looping;
 
 //Statements and expressions
-non terminal       function_call, return_type, if_statement, if_statement_break,return_statement, statement_with_break, body_with_break;
-non terminal       dictbody, seqbody, statement, base_statement, statement_list_main, main_statement;
+non terminal       function_call, if_statement, if_statement_break,return_statement, statement_with_break;
+non terminal       statement, base_statement;
 non terminal       expression, operator, multithreading, assignment_dec, assignment_stat, function_call_stat;
 
 //Functions
-non terminal       print, read, id_list_helper, id_list, identifier_list, dict_element, dict_element_list, base_expressions;
+non terminal       print, read, id_list_helper, id_list, identifier_list, dict_element_list, base_expressions;
 
 //Helpers
-nonterminal        idWithIndexHelp, indexCall, field_access, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper, lbrace_statement_list;
+nonterminal        indexCall, param_list_helper, elif_break, elif, dictbody_helper, expression_list_helper;
 
 /* ------------Precedences----------- */
 precedence left OR;
@@ -126,7 +126,6 @@ operator ::= PLUS
           | INTERSECTION
           | DIFFERENCE
           | IN
-//          | COLON
           ;
 
 //Literals
@@ -273,7 +272,6 @@ param_list ::= COMMA param_list_helper
 
 statement_list_with_break ::= statement_with_break statement_list_with_break | statement_with_break;
 statement_list ::= statement statement_list | statement;
-//statement_list_main ::= main_statement statement_list_main | main_statement;
 
 expression_list_helper ::= COMMA expression expression_list_helper|;
 expression_list ::= expression expression_list_helper
@@ -282,7 +280,6 @@ expression_list ::= expression expression_list_helper
 
 declaration_list ::= declaration_list declaration | ;
 
-//lbrace_statement_list ::= LBRACE statement_list RBRACE;
 
 id_list_helper ::= IDENTIFIER id_list |;
 id_list ::= COMMA id_list_helper
